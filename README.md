@@ -1,9 +1,25 @@
 # MVVMとは?
 
+**全体のコードはこちら**
+https://github.com/sakurakotubaki/MVVMDocs
+
+モックサーバーの使い方はこちらを参考にしてください。
+https://zenn.dev/joo_hashi/books/20dd2274ba88a9
+
+### このページについて
+MVVMについてわかりやすく解説するページです。フォルダの構成とか、ファイルの分け方の学習をするためのものなので、パッケージのインストールとかまではしないです。試してみたい人は、riverpod, Freezed, dioをインストールしてください。
+こちらのページは、riverpod generatorでは解説してないです。新しい書き方を知りたい人はこちらの本を読んでみてください。
+https://zenn.dev/joo_hashi/books/2c6c47e3d79b63
+
+https://pub.dev/packages/flutter_riverpod
+
+https://pub.dev/packages/dio
+
+https://zenn.dev/jboy_blog/articles/9c6bdebf87b8ae
+
 MVVM（Model-View-ViewModel）は、UIロジックをビジネスロジックから分離するためのソフトウェアアーキテクチャパターンです。MVVMは主に3つのコンポーネントで構成されています：
 
 Model：データアクセスレイヤーまたはビジネスロジックを表します。データベース操作やAPI呼び出し、データの検証や変換などを行います。
-View：ユーザーインターフェースを表します。ユーザーの入力を受け取り、ユーザーに情報を表示します。
 
 ```dart
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -39,6 +55,8 @@ class Posts with _$Posts {
       => _$PostsFromJson(json);
 }
 ```
+
+-----
 
 ViewModel：ViewとModelの間のデータバインディングとコマンドの実行を担当します。Viewが表示するデータの準備と、ユーザーのアクションに対するレスポンスを管理します。
 
@@ -112,7 +130,11 @@ class APITestImpl implements APITest {
 }
 ```
 
-## APIのデータを表示するView
+----
+
+View：ユーザーインターフェースを表します。ユーザーの入力を受け取り、ユーザーに情報を表示します。
+
+**APIのデータを表示するView**
 `FutureProvider`を使わなくてもViewModelで`AsyncValue`のデータを返せば非同期にデータを取得することができます。
 
 ```dart
@@ -154,3 +176,36 @@ class PostView extends ConsumerWidget {
   }
 }
 ```
+## アプリを実行するにはこちらのコードを追加
+```dart
+import 'package:flutter/material.dart';
+
+import 'post_view.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const PostView(),
+    );
+  }
+}
+```
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_tutorial/presentation/app.dart';
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+```
+
+## 最後に
+ざっくりとですけど、MVVMについて解説しました。以前は、
